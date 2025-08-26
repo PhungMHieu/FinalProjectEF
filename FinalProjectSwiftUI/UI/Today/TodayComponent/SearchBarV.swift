@@ -24,7 +24,3 @@ struct SearchBarV: View {
         .padding(.trailing, 18)
     }
 }
-
-//#Preview {
-//    SearchBarV(searchText: .constant(""))
-//}

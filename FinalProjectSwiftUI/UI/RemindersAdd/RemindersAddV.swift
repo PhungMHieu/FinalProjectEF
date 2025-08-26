@@ -6,22 +6,38 @@
 //
 
 import SwiftUI
+import RealmSwift
 
 struct RemindersAddV: View {
     @State var showDatePicker: Bool = false
-    @State var selectedDate: Date = .now
     @State var present: Bool = false
+    
+    @State private var title: String
+    @State private var detail: String
+    @State private var date: Date
+    @State private var tag: [String]
+    
+    @ObservedRealmObject var reminder: Reminder
+    @Environment(\.dismiss) private var dismiss
+    // Điền giá trị ban đầu từ Realm vào @State
+    init(reminder: Reminder) {
+        self._reminder = ObservedRealmObject(wrappedValue: reminder)
+        _title = State(initialValue: reminder.title)
+        _detail = State(initialValue: reminder.descriptionR)
+        _date = State(initialValue: reminder.date)
+        _tag = State(initialValue: Array(reminder.tag))          // nếu bạn có field `tag: String`
+    }
     var body: some View {
         NavigationStack {
             VStack(spacing:16) {
                 VStack(spacing:16) {
-                    TextField(text: .constant("")) {
+                    TextField(text: $title) {
                         Text("Title")
                             .font(.system(size: 17,weight: .regular))
                             .foregroundStyle(.neutral3)
                     }
                     Divider()
-                    TextField(text: .constant("")) {
+                    TextField(text: $detail) {
                         Text("Description")
                             .font(.system(size: 17,weight: .regular))
                             .foregroundStyle(.neutral3)
@@ -41,15 +57,12 @@ struct RemindersAddV: View {
                     if showDatePicker {
                         DatePicker(
                             "Select Date",
-                            selection: $selectedDate,
+                            selection: $date,
                             displayedComponents: .date
                         )
                         .datePickerStyle(GraphicalDatePickerStyle())
                         .background(.neutral5)
                         .labelsHidden()
-                        .padding(.leading, 8) // hoặc .padding(.horizontal)
-                        .frame(maxWidth: .infinity, alignment: .leading) // full width
-                        .contentShape(Rectangle())
                         .background(.neutral5)
                         .overlay(alignment: .top) {
                             Divider()
@@ -67,6 +80,7 @@ struct RemindersAddV: View {
                     HStack {
                         Image(.icnRepeat)
                         Text("Tag")
+                            .foregroundStyle(.neutral1)
                         Spacer()
                         Image(.icnArrowRight)
                     }
@@ -81,13 +95,17 @@ struct RemindersAddV: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") {
-                        print("Edit tapped")
+                        saveAndClose()
                     }
+                    .font(.system(size: 17,weight: .semibold))
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         print("Edit tapped")
+                        dismiss()
                     }
+                    .foregroundStyle(.accent)
+                    .font(.system(size: 17))
                 }
                 ToolbarItem (placement: .principal){
                     Text("New reminder")
@@ -97,12 +115,31 @@ struct RemindersAddV: View {
             .navigationBarTitleDisplayMode(.inline)
             .background(.backgroundRemindersAdd)
             .sheet(isPresented: $present, content: {
-                TagV()
+                TagV(tags: $tag)
             })
         }
     }
+    
+    // Chỉ ghi về Realm khi bấm Done
+    private func saveAndClose() {
+        let t = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let d = detail.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        do {
+            let realm = try Realm()
+            try realm.write {
+                // Upsert (update nếu tồn tại, tạo mới nếu chưa)
+                realm.create(Reminder.self, value: [
+                    "id": reminder.id,                
+                    "title": t,
+                    "descriptionR": d.isEmpty ? nil : d,
+                    "date": date,
+                    "tag": tag
+                ], update: .modified)
+            }
+        } catch {
+            print("Realm write failed: \(error)")
+        }
+        dismiss()
+    }
 }
-
-//#Preview {
-//    RemindersAddV()
-//}

@@ -8,20 +8,16 @@
 import SwiftUI
 
 struct TagComponentV: View {
+    let tag: String
+    let color: Color
     var body: some View {
-        Text("Học tập")
+        Text(tag)
             .font(.system(size: 16))
             .foregroundStyle(.neutral5)
             .padding(.horizontal,8)
             .padding(.vertical,4)
-            .background(.accent)
+            .background(color)
             .cornerRadius(8)
-        
+            .fixedSize(horizontal: true, vertical: false)
     }
 }
-
-//#Preview {
-//    TagComponentV()
-//        .frame(maxWidth: .infinity, maxHeight:.infinity)
-//        .background(.gray)
-//}

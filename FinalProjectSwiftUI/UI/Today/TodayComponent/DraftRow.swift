@@ -1,27 +1,25 @@
 //
-//  RemindContentV.swift
+//  drawftRowV.swift
 //  FinalProjectSwiftUI
 //
-//  Created by Admin on 25/8/25.
+//  Created by Admin on 26/8/25.
 //
 
 import SwiftUI
-import RealmSwift
 
-struct RemindContentV: View {
-    @State var isSelected: Bool = false
-    @State private var input: String = ""
-    @ObservedRealmObject var reminder: Reminder
-    var title: String
-    var onSave: ((Reminder) -> Void)?
-    
+struct DraftRow: View {
+    @Binding var draft: DraftReminder
+    var onCommit: (DraftReminder) -> Void
+
+    // Quản lý focus để biết lúc nào “mất focus toàn bộ”
+    enum Field: Hashable { case title, detail }
+    @FocusState var focused: Field?
+
     var body: some View {
         HStack(alignment: .top) {
             VStack{
                 Button {
-                    let newReminder = Reminder()
-                    newReminder.title = title
-                    onSave?(newReminder)
+                    
                 } label: {
                     Image(.ratio)
                         .padding(.top,1)
@@ -30,13 +28,14 @@ struct RemindContentV: View {
             VStack{
                 HStack(alignment: .top){
                     VStack(spacing:6) {
-                        TextField(text: $reminder.title) {
-                            Text(title)
+                        TextField(text: $draft.title) {
+                            Text("Title")
                         }
                         .font(.system(size: 15))
                         .foregroundStyle(.neutral1)
+                        .focused($focused, equals: .title)
                         
-                        TextField(text: $reminder.descriptionR) {
+                        TextField(text: .constant("")) {
                             Text("Reminder")
                         }
                         .font(.system(size: 15))
@@ -44,7 +43,7 @@ struct RemindContentV: View {
                     }
                     Spacer()
                     Button {
-                        isSelected.toggle()
+//                        isSelected.toggle()
                     } label: {
                         Image(.infoIcn)
                     }
@@ -55,8 +54,16 @@ struct RemindContentV: View {
                 Divider()
             }
         }
-        .sheet(isPresented: $isSelected, content: {
-            RemindersAddV(reminder: self.reminder)
-        })
+        .onChange(of: focused) { _, newFocus in
+            // Khi không còn field nào được focus → coi là “click ra ngoài”
+            if newFocus == nil {
+                onCommit(draft)
+            }
+        }
+        .onSubmit {
+            // Người dùng ấn Return trên bàn phím cũng commit
+            onCommit(draft)
+        }
+        .padding(.vertical, 6)
     }
 }

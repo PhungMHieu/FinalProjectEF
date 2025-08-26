@@ -26,7 +26,3 @@ struct TopBarV: View {
         .frame(height: 24)
     }
 }
-
-//#Preview {
-//    TopBarV()
-//}
