@@ -25,7 +25,7 @@ struct RemindersAddV: View {
         _title = State(initialValue: reminder.title)
         _detail = State(initialValue: reminder.descriptionR)
         _date = State(initialValue: reminder.date)
-        _tag = State(initialValue: Array(reminder.tag))          // nếu bạn có field `tag: String`
+        _tag = State(initialValue: Array(reminder.tag))          
     }
     var body: some View {
         NavigationStack {
@@ -63,6 +63,7 @@ struct RemindersAddV: View {
                         .datePickerStyle(GraphicalDatePickerStyle())
                         .background(.neutral5)
                         .labelsHidden()
+                        .tint(.accent)
                         .background(.neutral5)
                         .overlay(alignment: .top) {
                             Divider()
