@@ -9,10 +9,12 @@ import SwiftUI
 
 struct BottomBarV: View {
     @Binding var isShowPresent:Bool
+    @Binding var items:[String]
     var body: some View {
         HStack(spacing: 10) {
             Button {
-                isShowPresent.toggle()
+//                isShowPresent.toggle()
+                
             } label: {
                 Image(.icAddReminder)
             }
@@ -25,5 +27,5 @@ struct BottomBarV: View {
 }
 
 #Preview {
-    BottomBarV(isShowPresent: .constant(true))
+//    BottomBarV(isShowPresent: .constant(true), items: .constant([]))
 }
