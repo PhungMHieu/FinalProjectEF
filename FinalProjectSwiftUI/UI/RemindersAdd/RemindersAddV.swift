@@ -16,7 +16,7 @@ struct RemindersAddV: View {
     @State private var detail: String
     @State private var date: Date
     @State private var tag: [String]
-    
+    @State private var tagSelected: String = ""
     @ObservedRealmObject var reminder: Reminder
     @Environment(\.dismiss) private var dismiss
     // Điền giá trị ban đầu từ Realm vào @State
@@ -25,7 +25,7 @@ struct RemindersAddV: View {
         _title = State(initialValue: reminder.title)
         _detail = State(initialValue: reminder.descriptionR)
         _date = State(initialValue: reminder.date)
-        _tag = State(initialValue: Array(reminder.tag))          
+        _tag = State(initialValue: Array(reminder.tag))
     }
     var body: some View {
         NavigationStack {
@@ -78,12 +78,20 @@ struct RemindersAddV: View {
                 Button(action: {
                     self.present.toggle()
                 }) {
-                    HStack {
+                    HStack(spacing:0) {
                         Image(.icnRepeat)
+                            .padding(.trailing,12)
                         Text("Tag")
                             .foregroundStyle(.neutral1)
                         Spacer()
+                        Text(tagSelected == "" ? "None" : tagSelected)
+                            .font(.system(size: 17))
+                            .foregroundStyle(.neutral2)
+                            .lineLimit(1)
+                            .padding(.leading,39)
+//                            .frame(maxWidth: 186)
                         Image(.icnArrowRight)
+                            .padding(.leading,6)
                     }
                     .padding()
                     .background(.neutral5)
@@ -116,7 +124,7 @@ struct RemindersAddV: View {
             .navigationBarTitleDisplayMode(.inline)
             .background(.backgroundRemindersAdd)
             .sheet(isPresented: $present, content: {
-                TagV(tags: $tag)
+                TagV(tags: $tag, tagSelected: $tagSelected)
             })
         }
     }
@@ -135,7 +143,7 @@ struct RemindersAddV: View {
                     "title": t,
                     "descriptionR": d,
                     "date": date,
-                    "tag": tag
+                    "tag": self.tag
                 ], update: .modified)
             }
         } catch {
@@ -143,4 +151,7 @@ struct RemindersAddV: View {
         }
         dismiss()
     }
+}
+#Preview {
+    RemindersAddV(reminder: Reminder())
 }

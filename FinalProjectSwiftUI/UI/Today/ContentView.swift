@@ -22,6 +22,9 @@ struct ContentView: View {
     @State var selected: Reminder? = nil
     @FocusState private var isTitleFocused: Bool
     
+    init() {
+//        print(reminders.tag)
+    }
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -92,16 +95,16 @@ struct ContentView: View {
                     do {
                         let realm = try Realm() // dùng defaultConfiguration
                         if let url = realm.configuration.fileURL {
-                            print("📂 Realm file path:", url.path)
+                            print("Realm file path:", url.path)
                         }
                     } catch {
-                        print("⚠️ Failed to open Realm:", error)
+                        print("Failed to open Realm:", error)
                     }
                 }
                 Spacer()
             }
             .overlay(alignment: .center, content: {
-                if(reminders.isEmpty){
+                if(reminders.isEmpty) {
                     Text("No Reminders")
                         .font(.system(size: 20))
                         .foregroundStyle(.neutral3)

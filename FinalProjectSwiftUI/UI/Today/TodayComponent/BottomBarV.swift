@@ -10,7 +10,7 @@ import SwiftUI
 struct BottomBarV: View {
     var onAdd: (() -> Void)?
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing:0) {
             Button {
                 onAdd?()
             } label: {

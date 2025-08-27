@@ -10,12 +10,15 @@ import SwiftUI
 struct TagV: View {
     @Binding var tags: [String]
     @Environment(\.dismiss) private var dismiss
-    
+    @Binding var tagSelected: String
     var body: some View {
-        let tagV = ["Học tập", "Công việc", "Thói quen", "Sức khoẻ"]
+        let tagV:[String] = ["Học tập", "Công việc", "Thói quen", "Sức khoẻ"]
+//        tags = tagV
         let colors:[Color] = [.accent, .warning, .low, .primaryApp]
-        let columns = [GridItem(.adaptive(minimum: 84), spacing: 12, alignment: .center)]
-        
+        let columns = [
+            GridItem(.adaptive(minimum: 84, maximum: 84), spacing: 12, alignment: .center)
+        ]
+
         NavigationStack {
             VStack(spacing:0) {
                 ScrollView {
@@ -23,7 +26,8 @@ struct TagV: View {
                         ForEach(Array(tagV.enumerated()), id: \.element) { index, tag in
                             TagComponentV(
                                 tag: tag,
-                                color: colors[index % colors.count] // gán màu theo vòng lặp
+                                color: colors[index], // gán màu theo vòng lặp
+                                tagSelected: $tagSelected
                             )
                         }
                     }
