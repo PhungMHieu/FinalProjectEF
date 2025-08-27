@@ -15,7 +15,7 @@ struct RemindersAddV: View {
     @State private var title: String
     @State private var detail: String
     @State private var date: Date
-    @State private var tag: [String]
+    @State private var tag: [ReminderTag]
     @State private var tagSelected: String = ""
     @ObservedRealmObject var reminder: Reminder
     @Environment(\.dismiss) private var dismiss
@@ -25,7 +25,7 @@ struct RemindersAddV: View {
         _title = State(initialValue: reminder.title)
         _detail = State(initialValue: reminder.descriptionR)
         _date = State(initialValue: reminder.date)
-        _tag = State(initialValue: Array(reminder.tag))
+        _tag = State(initialValue: Array(reminder.tags))
     }
     var body: some View {
         NavigationStack {
@@ -84,6 +84,13 @@ struct RemindersAddV: View {
                         Text("Tag")
                             .foregroundStyle(.neutral1)
                         Spacer()
+                        ForEach(tag, id: \.self) { tag in
+                            tagSelected.append(tag.)
+//                            if tag.isSelected {
+////                                tagSelected.append("\(tag.name)")
+//                            }
+//                            tag.name
+                        }
                         Text(tagSelected == "" ? "None" : tagSelected)
                             .font(.system(size: 17))
                             .foregroundStyle(.neutral2)
@@ -124,7 +131,7 @@ struct RemindersAddV: View {
             .navigationBarTitleDisplayMode(.inline)
             .background(.backgroundRemindersAdd)
             .sheet(isPresented: $present, content: {
-                TagV(tags: $tag, tagSelected: $tagSelected)
+                TagV(tags: $tag)
             })
         }
     }
@@ -152,6 +159,6 @@ struct RemindersAddV: View {
         dismiss()
     }
 }
-#Preview {
-    RemindersAddV(reminder: Reminder())
-}
+//#Preview {
+//    RemindersAddV(reminder: Reminder())
+//}

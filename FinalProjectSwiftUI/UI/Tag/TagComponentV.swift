@@ -8,21 +8,15 @@
 import SwiftUI
 
 struct TagComponentV: View {
-    @State var isSelected: Bool = false
-    
     var tag: String
     let color: Color
-    @Binding var tagSelected: String
-    
+    @Binding var tagSelected: Bool
     var body: some View {
         Button {
-            isSelected.toggle()
-            if isSelected {
-                tagSelected.append("\(tag),")
-            }
+            tagSelected.toggle()
         } label: {
             Text(tag)
-                .modifier(TagStyle(isSelected: isSelected, color: color))
+                .modifier(TagStyle(isSelected: tagSelected, color: color))
         }
     }
 }
