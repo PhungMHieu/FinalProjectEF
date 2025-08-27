@@ -133,7 +133,7 @@ struct RemindersAddV: View {
                 realm.create(Reminder.self, value: [
                     "id": reminder.id,                
                     "title": t,
-                    "descriptionR": d.isEmpty ? nil : d,
+                    "descriptionR": d,
                     "date": date,
                     "tag": tag
                 ], update: .modified)
