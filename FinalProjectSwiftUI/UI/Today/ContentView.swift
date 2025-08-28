@@ -44,6 +44,7 @@ struct ContentView: View {
                                 .font(.system(size: 22, weight: .bold))
                                 .foregroundStyle(.neutral1)
                                 .padding(.bottom,12)
+                                .padding(.leading,16)
                         }
                         .listRowInsets(EdgeInsets())
                         .listRowSeparator(.hidden)
@@ -58,6 +59,7 @@ struct ContentView: View {
                                 .font(.system(size: 22, weight: .bold))
                                 .foregroundStyle(.neutral1)
                                 .padding(.bottom,12)
+                                .padding(.leading,16)
                         }
                         .listRowInsets(EdgeInsets())
                         .listRowSeparator(.hidden)
@@ -89,7 +91,9 @@ struct ContentView: View {
 
                 }
                 .listStyle(.inset)
-                .padding(.horizontal, 16)
+//                .listStyle(.plain)
+                
+//                .padding(.horizontal, 16)
                 .scrollContentBackground(.hidden)
                 .onAppear {
                     do {

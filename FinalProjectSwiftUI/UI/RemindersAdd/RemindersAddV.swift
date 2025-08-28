@@ -16,7 +16,7 @@ struct RemindersAddV: View {
     @State private var detail: String
     @State private var date: Date
     @State private var tag: [ReminderTag]
-    @State private var tagSelected: String = ""
+    @State var tagSelected: String = ""
     @ObservedRealmObject var reminder: Reminder
     @Environment(\.dismiss) private var dismiss
     // Điền giá trị ban đầu từ Realm vào @State
@@ -85,20 +85,21 @@ struct RemindersAddV: View {
                             .foregroundStyle(.neutral1)
                         Spacer()
                         ForEach(tag, id: \.self) { tag in
-                            tagSelected.append(tag.)
+                            if(tag.isSelected) {
+                                Text("\(tag.name)")
+                            }
+//                            var string: String = tag.name
+//                            var string: String = tag.name
 //                            if tag.isSelected {
-////                                tagSelected.append("\(tag.name)")
+//                                Text(tagSelected == "" ? "None" : tag)
+//                                    .font(.system(size: 17))
+//                                    .foregroundStyle(.neutral2)
+//                                    .lineLimit(1)
+//                                    .padding(.leading,39)
+//                                Image(.icnArrowRight)
+//                                    .padding(.leading,6)
 //                            }
-//                            tag.name
                         }
-                        Text(tagSelected == "" ? "None" : tagSelected)
-                            .font(.system(size: 17))
-                            .foregroundStyle(.neutral2)
-                            .lineLimit(1)
-                            .padding(.leading,39)
-//                            .frame(maxWidth: 186)
-                        Image(.icnArrowRight)
-                            .padding(.leading,6)
                     }
                     .padding()
                     .background(.neutral5)
